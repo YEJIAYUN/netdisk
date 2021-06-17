@@ -3,9 +3,9 @@ package com.ustc.upload.service;
 public interface UploadStoreService {
     /**
      * 上传文件
-     * @param bytes
-     * @param filename
-     * @return
+     * @param bytes 文件二进制数据
+     * @param filename 文件名
+     * @return 上传路径
      */
-    public String upload(byte[] bytes, String filename);
+    String upload(byte[] bytes, String filename);
 }

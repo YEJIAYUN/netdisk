@@ -10,12 +10,12 @@ public interface UploadFileService {
      * 上传切块
      * @param chunk 切块
      */
-    public void uploadChunk(Chunk chunk);
+    void uploadChunk(Chunk chunk);
 
     /**
      * 检查文件是否存在
      * @param fileMd5 文件的md5
-     * @return
+     * @return 检查结果
      */
-    public Integer checkFile(String fileMd5);
+    Integer checkFile(String fileMd5);
 }
