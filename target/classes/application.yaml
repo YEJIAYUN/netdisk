@@ -1,0 +1,14 @@
+server:
+  #tomcat配置信息
+  tomcat:
+    uri-encoding: utf-8
+  # 访问端口
+  port: 8080
+
+spring:
+  data:
+    # mongoDB配置项
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: fileSystem
