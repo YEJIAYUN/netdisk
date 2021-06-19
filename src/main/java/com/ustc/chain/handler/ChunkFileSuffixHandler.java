@@ -7,11 +7,13 @@ import com.ustc.chain.param.ChunkRequest;
 import com.ustc.exception.ServiceException;
 import com.ustc.exception.ServiceExceptionEnum;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * 校验文件格式
  * @author 叶嘉耘
  */
+@Component
 public class ChunkFileSuffixHandler extends Handler {
     @Override
     public void doHandler(ContextRequest request, ContextResponse response) {

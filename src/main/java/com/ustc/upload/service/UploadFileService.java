@@ -1,6 +1,7 @@
 package com.ustc.upload.service;
 
 import com.ustc.entity.Chunk;
+import com.ustc.entity.MergeFileBean;
 
 /**
  * @author 叶嘉耘
@@ -18,4 +19,10 @@ public interface UploadFileService {
      * @return 检查结果
      */
     Integer checkFile(String fileMd5);
+
+    /**
+     * 合并切块
+     * @param bean
+     */
+    void mergeChunk(MergeFileBean bean);
 }

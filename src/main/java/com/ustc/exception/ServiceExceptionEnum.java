@@ -21,6 +21,7 @@ public enum ServiceExceptionEnum {
     SYSTEM_ERROR(2001000, "服务端发生异常"),
     // 上传模块
     CHUNK_NOT_NULL(1001000,"切块不能为空"),
+    PARAM_ERROR(1001000, "参数不正确"),
     // 下载模块
     // 用户模块
     // 工具类

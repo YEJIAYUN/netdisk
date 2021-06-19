@@ -2,6 +2,7 @@ package com.ustc.upload.controller;
 
 import com.ustc.entity.Chunk;
 import com.ustc.entity.ChunkPojo;
+import com.ustc.entity.MergeFileBean;
 import com.ustc.exception.ServiceException;
 import com.ustc.exception.ServiceExceptionEnum;
 import com.ustc.upload.service.UploadFileService;
@@ -42,6 +43,7 @@ public class FileUploadController {
     public CommonResult uploadChunk(MultipartFile file, ChunkPojo chunkPojo, String token, HttpServletRequest request,
                                     HttpServletResponse response) throws IOException, RuntimeException {
         // 1. 通过token获取用户信息
+
         // 2. 判断切块是否为空
         if (file == null) {
             throw new ServiceException(ServiceExceptionEnum.CHUNK_NOT_NULL);
@@ -50,9 +52,10 @@ public class FileUploadController {
         Chunk chunk = new Chunk();
         BeanUtils.copyProperties(chunkPojo, chunk);
         chunk.setBytes(file.getBytes());
-
         // 设置用户id、用户名
-        // ...
+        chunk.setUserid("test");
+        chunk.setUsername("test");
+
         // 4. 调用切块上传接口
         uploadFileService.uploadChunk(chunk);
 
@@ -61,12 +64,15 @@ public class FileUploadController {
 
     @PostMapping("/checkFile")
     public CommonResult checkFile(String filemd5, long filesize) {
-        try {
-            return CommonResultUtils.success(uploadFileService.checkFile(filemd5));
-        } catch (Exception ex) {
-            return CommonResultUtils.error(ServiceExceptionEnum.SYSTEM_ERROR.getCode(),
-                    ServiceExceptionEnum.SYSTEM_ERROR.getMessage());
-        }
+
+        return CommonResultUtils.success(uploadFileService.checkFile(filemd5));
     }
 
+    @PostMapping("/mergeChunk")
+    public CommonResult mergeChunk(MergeFileBean bean, HttpServletRequest request) throws ServiceException{
+        // 获取用户信息
+        // 合并切块
+        uploadFileService.mergeChunk(bean);
+        return CommonResultUtils.success("切块合并成功");
+    }
 }
