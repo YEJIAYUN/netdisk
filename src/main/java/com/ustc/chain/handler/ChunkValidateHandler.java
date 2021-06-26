@@ -10,7 +10,7 @@ import com.ustc.utils.ValidateUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * 参数校验
+ * 切块上传参数校验
  * @author 叶嘉耘
  */
 @Component

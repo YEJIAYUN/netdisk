@@ -1,5 +1,8 @@
 package com.ustc.chain.core;
 
+/**
+ * @author 叶嘉耘
+ */
 public class ContextHolder {
     // 使用ThreadLocal来管理Request和Response
 

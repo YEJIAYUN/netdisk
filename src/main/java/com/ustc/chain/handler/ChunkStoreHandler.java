@@ -28,7 +28,7 @@ public class ChunkStoreHandler extends Handler {
             // 将块上传
             String storePath = uploadStoreService.upload(chunk.getBytes(), chunk.getName());
             // 设置存储路径
-            chunk.setStroePath(storePath);
+            chunk.setStorePath(storePath);
             this.updateRequest(chunk);
         } else {
             throw new ServiceException(ServiceExceptionEnum.PARAM_ERROR);

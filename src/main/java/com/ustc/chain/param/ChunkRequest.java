@@ -46,7 +46,7 @@ public class ChunkRequest extends ContextRequest {
     /**
      * 块存储路径
      */
-    private String stroePath;
+    private String storePath;
     /**
      * 文件类型
      */
@@ -133,12 +133,12 @@ public class ChunkRequest extends ContextRequest {
         return this;
     }
 
-    public String getStroePath() {
-        return stroePath;
+    public String getStorePath() {
+        return storePath;
     }
 
-    public ChunkRequest setStroePath(String stroePath) {
-        this.stroePath = stroePath;
+    public ChunkRequest setStorePath(String storePath) {
+        this.storePath = storePath;
         return this;
     }
 

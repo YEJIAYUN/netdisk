@@ -23,9 +23,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @author 叶嘉耘
+ */
 @Api(tags = "文件上传")
 @RestController
-@RequestMapping("/disk/filecommon")
+@RequestMapping("/disk/fileupload")
 public class FileUploadController {
 
     @Autowired
@@ -62,15 +65,19 @@ public class FileUploadController {
         return CommonResultUtils.success("切块上传成功");
     }
 
+    @ApiOperation("检查文件是否存在")
     @PostMapping("/checkFile")
     public CommonResult checkFile(String filemd5, long filesize) {
-
         return CommonResultUtils.success(uploadFileService.checkFile(filemd5));
     }
 
+    @ApiOperation("合并切块")
+    @ApiImplicitParam(name = "bean", value = "")
     @PostMapping("/mergeChunk")
     public CommonResult mergeChunk(MergeFileBean bean, HttpServletRequest request) throws ServiceException{
         // 获取用户信息
+        bean.setUserid("test");
+        bean.setUsername("test");
         // 合并切块
         uploadFileService.mergeChunk(bean);
         return CommonResultUtils.success("切块合并成功");

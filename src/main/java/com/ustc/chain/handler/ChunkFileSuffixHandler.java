@@ -11,22 +11,23 @@ import org.springframework.stereotype.Component;
 
 /**
  * 校验文件格式
+ *
  * @author 叶嘉耘
  */
 @Component
 public class ChunkFileSuffixHandler extends Handler {
     @Override
     public void doHandler(ContextRequest request, ContextResponse response) {
-//        if (request instanceof ChunkRequest) {
-//            ChunkRequest chunk = (ChunkRequest) request;
-//
-//            // 获取文件名后缀
-//            String suffix = FilenameUtils.getExtension(chunk.getName());
-//
-//            // 去Redis查询, 如果不存在, 去mysql查询
+        if (request instanceof ChunkRequest) {
+            ChunkRequest chunk = (ChunkRequest) request;
 
-//        } else {
-//            throw new RuntimeException("ChunkFileSuffixHandler参数不正确");
-//        }
+            // 获取文件名后缀
+            String suffix = FilenameUtils.getExtension(chunk.getName());
+            // 待完善该功能
+            chunk.setTypecode("0");
+
+        } else {
+            throw new RuntimeException("ChunkFileSuffixHandler参数不正确");
+        }
     }
 }
