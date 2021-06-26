@@ -1,0 +1,114 @@
+package com.ustc.entity;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+/**
+ * @author 叶嘉耘
+ * @date 2021-4-1
+ */
+@Document(collection = "DiskMd5Chunk")
+public class DiskMd5Chunk {
+    @Id
+    private String id;
+    /**
+     * 文件md5
+     */
+    private String fileMd5;
+    /**
+     * 切块名称
+     */
+    private String chunkName;
+    /**
+     * 切块序号
+     */
+    private Integer chunkNumber;
+    /**
+     * 切块大小
+     */
+    private Long chunkSize;
+    /**
+     * 切块总数
+     */
+    private Integer totalChunks;
+    /**
+     * 文件大小
+     */
+    private Long totalSize;
+    /**
+     * 文件路径
+     */
+    private String storePath;
+
+    public String getId() {
+        return id;
+    }
+
+    public DiskMd5Chunk setId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getFileMd5() {
+        return fileMd5;
+    }
+
+    public DiskMd5Chunk setFileMd5(String fileMd5) {
+        this.fileMd5 = fileMd5;
+        return this;
+    }
+
+    public String getChunkName() {
+        return chunkName;
+    }
+
+    public DiskMd5Chunk setChunkName(String chunkName) {
+        this.chunkName = chunkName;
+        return this;
+    }
+
+    public Integer getChunkNumber() {
+        return chunkNumber;
+    }
+
+    public DiskMd5Chunk setChunkNumber(Integer chunkNumber) {
+        this.chunkNumber = chunkNumber;
+        return this;
+    }
+
+    public Long getChunkSize() {
+        return chunkSize;
+    }
+
+    public DiskMd5Chunk setChunkSize(Long chunkSize) {
+        this.chunkSize = chunkSize;
+        return this;
+    }
+
+    public Integer getTotalChunks() {
+        return totalChunks;
+    }
+
+    public DiskMd5Chunk setTotalChunks(Integer totalChunks) {
+        this.totalChunks = totalChunks;
+        return this;
+    }
+
+    public Long getTotalSize() {
+        return totalSize;
+    }
+
+    public DiskMd5Chunk setTotalSize(Long totalSize) {
+        this.totalSize = totalSize;
+        return this;
+    }
+
+    public String getStorePath() {
+        return storePath;
+    }
+
+    public DiskMd5Chunk setStorePath(String storePath) {
+        this.storePath = storePath;
+        return this;
+    }
+}
