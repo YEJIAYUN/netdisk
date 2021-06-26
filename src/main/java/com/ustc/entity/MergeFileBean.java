@@ -17,7 +17,7 @@ public class MergeFileBean implements Serializable {
     /**
      * 前端上传文件id
      */
-    private String fileId;
+    private String fileid;
     /**
      * 文件名
      */
@@ -25,7 +25,7 @@ public class MergeFileBean implements Serializable {
     /**
      * 文件大小
      */
-    private long totalSize;
+    private Long totalSize;
     /**
      * 文件md5
      */
@@ -61,12 +61,12 @@ public class MergeFileBean implements Serializable {
         return this;
     }
 
-    public String getFileId() {
-        return fileId;
+    public String getFileid() {
+        return fileid;
     }
 
-    public MergeFileBean setFileId(String fileId) {
-        this.fileId = fileId;
+    public MergeFileBean setFileid(String fileid) {
+        this.fileid = fileid;
         return this;
     }
 
@@ -79,11 +79,11 @@ public class MergeFileBean implements Serializable {
         return this;
     }
 
-    public long getTotalSize() {
+    public Long getTotalSize() {
         return totalSize;
     }
 
-    public MergeFileBean setTotalSize(long totalSize) {
+    public MergeFileBean setTotalSize(Long totalSize) {
         this.totalSize = totalSize;
         return this;
     }

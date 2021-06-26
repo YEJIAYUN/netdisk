@@ -15,6 +15,7 @@ import com.ustc.upload.service.UploadFileService;
 import com.ustc.utils.SpringContentUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +44,7 @@ public class UploadFileServiceImpl implements UploadFileService {
             @Override
             protected void initChannel(Pipeline line) {
                 // 3.1 参数校验
-                // line.addLast(scu.getHandler(ChunkValidateHandler.class));
+                line.addLast(scu.getHandler(ChunkValidateHandler.class));
                 // 3.2 校验是否支持对应格式
                 // line.addLast(new ChunkFileSuffixHandler());
                 // 3.3 切块存储
@@ -73,7 +74,7 @@ public class UploadFileServiceImpl implements UploadFileService {
     public void mergeChunk(MergeFileBean bean) {
         // 1. 获取文件的md5, 将其当作锁
         String lockname = bean.getFilemd5();
-
+        System.out.println(bean.getFilemd5());
         // 2. 确保相同的字符串指向常量池中的同一个对象
         Interner<String> lock = Lock.getStringPool();
 
@@ -88,6 +89,7 @@ public class UploadFileServiceImpl implements UploadFileService {
         // 上锁
         synchronized (lock.intern(lockname)) {
             MergeRequest mergeRequest = new MergeRequest();
+            BeanUtils.copyProperties(bean, mergeRequest);
 
             ResponsibleChain chain = new ResponsibleChain();
             chain.loadHandler(new HandlerInitializer(mergeRequest, null) {

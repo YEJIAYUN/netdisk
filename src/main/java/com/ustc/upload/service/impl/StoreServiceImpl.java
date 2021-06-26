@@ -34,8 +34,9 @@ public class StoreServiceImpl implements UploadStoreService {
         String newFilename = UUID.randomUUID() + "." + FilenameUtils.getExtension(filename);
         // 将文件存入服务器中
         File file = new File(storePath + "/" + folders + "/" + newFilename);
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
+        File parentFile = file.getParentFile();
+        if (!parentFile.exists()) {
+            if (!parentFile.mkdirs()) {
                 throw new ServiceException(ServiceExceptionEnum.FOLDER_CREATE_FAIL);
             }
         }

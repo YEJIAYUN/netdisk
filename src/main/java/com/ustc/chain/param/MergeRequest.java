@@ -21,7 +21,7 @@ public class MergeRequest extends ContextRequest {
     /**
      * 前端上传文件id
      */
-    private String fileId;
+    private String fileid;
     /**
      * 文件名
      */
@@ -88,12 +88,12 @@ public class MergeRequest extends ContextRequest {
         return this;
     }
 
-    public String getFileId() {
-        return fileId;
+    public String getFileid() {
+        return fileid;
     }
 
-    public MergeRequest setFileId(String fileId) {
-        this.fileId = fileId;
+    public MergeRequest setFileid(String fileid) {
+        this.fileid = fileid;
         return this;
     }
 

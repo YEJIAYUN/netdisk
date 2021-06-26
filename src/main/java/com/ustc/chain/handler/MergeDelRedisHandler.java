@@ -28,7 +28,7 @@ public class MergeDelRedisHandler extends Handler {
         if (request instanceof MergeRequest) {
             MergeRequest bean = (MergeRequest) request;
 
-            String key = bean.getUserid() + "-" + bean.getUuid() + "-" + bean.getFileId() +
+            String key = bean.getUserid() + "-" + bean.getUuid() + "-" + bean.getFileid() +
                     "-" + bean.getFilename() + "-*";
             stringRedisTemplate.delete(key);
         } else {

@@ -34,7 +34,7 @@ public class MergeGetChunkHandler extends Handler {
             // key: 用户id-uuid-文件id-文件名-块序号, 不需要块序号, 模糊查询, 找出所有块
             String userid = bean.getUserid();
             String uuid = bean.getUuid();
-            String fileId = bean.getFileId();
+            String fileId = bean.getFileid();
             String filename = bean.getFilename();
             List<RedisChunkTemp> temps = new ArrayList<>();
 

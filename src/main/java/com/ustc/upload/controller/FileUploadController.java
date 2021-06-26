@@ -46,7 +46,7 @@ public class FileUploadController {
     public CommonResult uploadChunk(MultipartFile file, ChunkPojo chunkPojo, String token, HttpServletRequest request,
                                     HttpServletResponse response) throws IOException, RuntimeException {
         // 1. 通过token获取用户信息
-
+        System.out.println("uploadChunk中收到的uuid: " + chunkPojo.getUuid());
         // 2. 判断切块是否为空
         if (file == null) {
             throw new ServiceException(ServiceExceptionEnum.CHUNK_NOT_NULL);
@@ -67,7 +67,8 @@ public class FileUploadController {
 
     @ApiOperation("检查文件是否存在")
     @PostMapping("/checkFile")
-    public CommonResult checkFile(String filemd5, long filesize) {
+    public CommonResult checkFile(String filemd5) {
+        System.out.println(filemd5);
         return CommonResultUtils.success(uploadFileService.checkFile(filemd5));
     }
 
@@ -78,6 +79,7 @@ public class FileUploadController {
         // 获取用户信息
         bean.setUserid("test");
         bean.setUsername("test");
+        System.out.println("mergeChunk中收到的uuid: " + bean.getUuid());
         // 合并切块
         uploadFileService.mergeChunk(bean);
         return CommonResultUtils.success("切块合并成功");

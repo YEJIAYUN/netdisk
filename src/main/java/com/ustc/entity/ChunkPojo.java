@@ -16,7 +16,7 @@ public class ChunkPojo {
     @ApiModelProperty(value = "文件名称", required = true)
     private String name;
     @ApiModelProperty(value = "文件大小", required = true)
-    private String size;
+    private Long size;
     @ApiModelProperty(value = "切块序号", required = true)
     private Integer chunk;
     @ApiModelProperty(value = "切块数量", required = true)
@@ -49,11 +49,11 @@ public class ChunkPojo {
         return this;
     }
 
-    public String getSize() {
+    public Long getSize() {
         return size;
     }
 
-    public ChunkPojo setSize(String size) {
+    public ChunkPojo setSize(Long size) {
         this.size = size;
         return this;
     }
