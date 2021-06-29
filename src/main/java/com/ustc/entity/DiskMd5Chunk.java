@@ -1,5 +1,6 @@
 package com.ustc.entity;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "DiskMd5Chunk")
 public class DiskMd5Chunk {
     @Id
-    private String id;
+    private ObjectId id;
     /**
      * 文件md5
      */
@@ -40,11 +41,11 @@ public class DiskMd5Chunk {
      */
     private String storePath;
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public DiskMd5Chunk setId(String id) {
+    public DiskMd5Chunk setId(ObjectId id) {
         this.id = id;
         return this;
     }

@@ -43,7 +43,7 @@ public class FileUploadController {
             @ApiImplicitParam(name = "token", dataTypeClass = String.class, required = true)
     })
     @PostMapping("/uploadChunk")
-    public CommonResult uploadChunk(MultipartFile file, ChunkPojo chunkPojo, String token, HttpServletRequest request,
+    public CommonResult<String> uploadChunk(MultipartFile file, ChunkPojo chunkPojo, String token, HttpServletRequest request,
                                     HttpServletResponse response) throws IOException, RuntimeException {
         // 1. 通过token获取用户信息
         System.out.println("uploadChunk中收到的uuid: " + chunkPojo.getUuid());
@@ -67,15 +67,14 @@ public class FileUploadController {
 
     @ApiOperation("检查文件是否存在")
     @PostMapping("/checkFile")
-    public CommonResult checkFile(String filemd5) {
-        System.out.println(filemd5);
+    public CommonResult<Integer> checkFile(String filemd5) {
         return CommonResultUtils.success(uploadFileService.checkFile(filemd5));
     }
 
     @ApiOperation("合并切块")
-    @ApiImplicitParam(name = "bean", value = "")
     @PostMapping("/mergeChunk")
-    public CommonResult mergeChunk(MergeFileBean bean, HttpServletRequest request) throws ServiceException{
+    public CommonResult<String> mergeChunk(MergeFileBean bean) throws ServiceException{
+        System.out.println("进入合并切块");
         // 获取用户信息
         bean.setUserid("test");
         bean.setUsername("test");

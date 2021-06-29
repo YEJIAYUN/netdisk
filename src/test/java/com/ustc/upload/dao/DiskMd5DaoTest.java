@@ -22,7 +22,6 @@ public class DiskMd5DaoTest {
         DiskMd5 diskMd5 = new DiskMd5();
         diskMd5.setFileName("test");
         diskMd5.setFileMd5("test-test-test-test-md5");
-        diskMd5.setId("test-id");
         diskMd5.setFileNum(10);
         diskMd5.setFileSize(10000L);
         diskMd5.setFileSuffix("png");

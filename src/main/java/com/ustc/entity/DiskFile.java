@@ -1,5 +1,6 @@
 package com.ustc.entity;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +13,7 @@ import java.util.Date;
 @Document(collection = "DiskFile")
 public class DiskFile {
     @Id
-    private String id;
+    private ObjectId id;
     /**
      * 父目录id
      */
@@ -50,11 +51,11 @@ public class DiskFile {
      */
     private Date createTime;
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public DiskFile setId(String id) {
+    public DiskFile setId(ObjectId id) {
         this.id = id;
         return this;
     }

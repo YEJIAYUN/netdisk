@@ -1,8 +1,8 @@
 package com.ustc.entity;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 /**
  * 文件Md5, 每个文件唯一一份, 一个文件Md5表的数据项对应文件切块表中的多个数据项
@@ -14,7 +14,7 @@ public class DiskMd5 {
      * 文件id
      */
     @Id
-    private String id;
+    private ObjectId id;
     /**
      * 文件名称
      */
@@ -40,11 +40,11 @@ public class DiskMd5 {
      */
     private String typeCode;
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public DiskMd5 setId(String id) {
+    public DiskMd5 setId(ObjectId id) {
         this.id = id;
         return this;
     }

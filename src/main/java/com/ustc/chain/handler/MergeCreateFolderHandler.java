@@ -9,7 +9,9 @@ import com.ustc.exception.ServiceException;
 import com.ustc.exception.ServiceExceptionEnum;
 import com.ustc.upload.dao.DiskFileDao;
 import com.ustc.utils.FileType;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -47,21 +49,21 @@ public class MergeCreateFolderHandler extends Handler {
 
                     // 如果不存在该文件夹, 则创建该文件夹, 否则不需要创建
                     if (diskFile == null) {
-                        DiskFile folder = new DiskFile();
-                        folder.setFileType(FileType.FOLDER.getTypeCode());
-                        folder.setFileName(name);
-                        folder.setPid(pid);
-                        folder.setUserid(userid);
-                        folder.setFileSize(0L);
-                        folder.setCreateTime(new Date());
-                        // 给文件夹设置个随机uuid
-                        folder.setId(UUID.randomUUID().toString());
-                        diskFileDao.insertOne(folder);
+                        diskFile = new DiskFile();
+                        diskFile.setFileType(FileType.FOLDER.getTypeCode());
+                        diskFile.setFileName(name);
+                        diskFile.setPid(pid);
+                        diskFile.setUserid(userid);
+                        diskFile.setFileSize(0L);
+                        diskFile.setCreateTime(new Date());
+                        // 给文件夹设置个随机object-id
+                        diskFile.setId(ObjectId.get());
+                        diskFileDao.insertOne(diskFile);
                     }
 
                     // 将当前文件夹的id设置为新的pid
-                    assert diskFile != null;
-                    pid = diskFile.getId();
+                    pid = String.valueOf(diskFile.getId());
+                    System.out.println("文件夹id:" + pid);
                     // 将对应的文件夹对象加入到
                     folders.add(diskFile);
                 }
