@@ -9,6 +9,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.SolrInputDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,8 @@ public class FileSearchSolrServiceImpl implements FileSearchService {
     private SolrClient solrClient;
 
     @Override
-    public PageInfo<FileSearchBean> search(String filename, String userid, Integer page, Integer limit) throws Exception {
+    public PageInfo<FileSearchBean> search(String filename, String userid, Integer page, Integer limit)
+            throws Exception {
         PageInfo<FileSearchBean> pageInfo = new PageInfo<>();
         SolrQuery query = new SolrQuery();
         if (StringUtils.isEmpty(filename)) {
@@ -75,23 +77,45 @@ public class FileSearchSolrServiceImpl implements FileSearchService {
     }
 
     @Override
-    public void add(FileSearchBean bean) {
+    public void add(FileSearchBean bean) throws SolrServerException, IOException {
+        SolrInputDocument document = new SolrInputDocument();
+        document.addField("id", bean.getId());
+        document.addField("filename", bean.getFilename());
+        document.addField("pid", bean.getPid());
+        document.addField("pname", bean.getPname());
+        document.addField("filemd5", bean.getFilemd5());
+        document.addField("fileicon", bean.getFileicon());
+        document.addField("typecode", bean.getTypecode());
+        document.addField("filesuffix", bean.getFilesuffix());
+        document.addField("filesize", bean.getFilesize());
+        document.addField("filetype", bean.getFiletype());
+        document.addField("createuserid", bean.getCreateuserid());
+        document.addField("createusername", bean.getCreateusername());
+        document.addField("createtime", bean.getCreatetime());
 
+        solrClient.add(document);
+        solrClient.commit();
     }
 
     @Override
-    public void delete(String id) {
-
+    public void delete(String id) throws SolrServerException, IOException {
+        solrClient.deleteById(id);
+        solrClient.commit();
     }
 
     @Override
-    public void deleteAll() {
-
+    public void deleteAll() throws SolrServerException, IOException {
+        solrClient.deleteByQuery("*:*");
+        solrClient.commit();
     }
 
     @Override
-    public Long findCount() {
-        return null;
+    public Long findCount() throws SolrServerException, IOException {
+        SolrQuery query = new SolrQuery();
+        query.setQuery("*:*");
+
+        QueryResponse response = solrClient.query(query);
+        return response.getResults().getNumFound();
     }
 
     public List<FileSearchBean> getRecords(SolrDocumentList solrDocuments, QueryResponse response) {
