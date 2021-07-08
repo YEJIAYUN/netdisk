@@ -2,6 +2,9 @@ package com.ustc.upload.service;
 
 import com.ustc.entity.Chunk;
 import com.ustc.entity.MergeFileBean;
+import org.apache.solr.client.solrj.SolrServerException;
+
+import java.io.IOException;
 
 /**
  * @author 叶嘉耘
@@ -11,7 +14,7 @@ public interface UploadFileService {
      * 上传切块
      * @param chunk 切块
      */
-    void uploadChunk(Chunk chunk);
+    void uploadChunk(Chunk chunk) throws SolrServerException, IOException;
 
     /**
      * 检查文件是否存在
@@ -24,5 +27,5 @@ public interface UploadFileService {
      * 合并切块
      * @param bean
      */
-    void mergeChunk(MergeFileBean bean);
+    void mergeChunk(MergeFileBean bean) throws SolrServerException, IOException;
 }

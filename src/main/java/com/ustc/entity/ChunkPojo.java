@@ -15,11 +15,11 @@ public class ChunkPojo {
     private String id;
     @ApiModelProperty(value = "文件名称", required = true)
     private String name;
-    @ApiModelProperty(value = "文件大小", required = true)
+    @ApiModelProperty(value = "文件大小", required = true, example = "1")
     private Long size;
-    @ApiModelProperty(value = "切块序号", required = true)
+    @ApiModelProperty(value = "切块序号", required = true, example = "1")
     private Integer chunk;
-    @ApiModelProperty(value = "切块数量", required = true)
+    @ApiModelProperty(value = "切块数量", required = true, example = "10")
     private Integer chunks;
 
     public String getUuid() {

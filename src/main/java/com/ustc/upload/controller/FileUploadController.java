@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,8 +44,7 @@ public class FileUploadController {
             @ApiImplicitParam(name = "token", dataTypeClass = String.class, required = true)
     })
     @PostMapping("/uploadChunk")
-    public CommonResult<String> uploadChunk(MultipartFile file, ChunkPojo chunkPojo, String token, HttpServletRequest request,
-                                    HttpServletResponse response) throws IOException, RuntimeException {
+    public CommonResult<String> uploadChunk(MultipartFile file, ChunkPojo chunkPojo, String token) throws IOException, RuntimeException, SolrServerException {
         // 1. 通过token获取用户信息
         System.out.println("uploadChunk中收到的uuid: " + chunkPojo.getUuid());
         // 2. 判断切块是否为空
@@ -66,6 +66,7 @@ public class FileUploadController {
     }
 
     @ApiOperation("检查文件是否存在")
+    @ApiImplicitParam(name = "filemd5", value = "文件md5", dataTypeClass = String.class)
     @PostMapping("/checkFile")
     public CommonResult<Integer> checkFile(String filemd5) {
         return CommonResultUtils.success(uploadFileService.checkFile(filemd5));
@@ -73,7 +74,7 @@ public class FileUploadController {
 
     @ApiOperation("合并切块")
     @PostMapping("/mergeChunk")
-    public CommonResult<String> mergeChunk(MergeFileBean bean) throws ServiceException{
+    public CommonResult<String> mergeChunk(MergeFileBean bean) throws ServiceException, SolrServerException, IOException {
         System.out.println("进入合并切块");
         // 获取用户信息
         bean.setUserid("test");

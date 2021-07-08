@@ -14,8 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 全局异常处理
+ * @author 叶嘉耘
  */
-// @ControllerAdvice(basePackages = "com.ustc.upload.controller")
+ @ControllerAdvice(basePackages = {
+         "com.ustc.upload.controller",
+         "com.ustc.login.controller",
+         "com.ustc.download.controller"})
 public class GlobalExceptionHandler {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
