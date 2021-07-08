@@ -7,23 +7,30 @@ import com.ustc.entity.*;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import com.ustc.login.service.UserService;
+import com.ustc.upload.dao.DiskFileDao;
 import com.ustc.utils.CapacityUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-@Service
+@Component
 public class FileServiceImpl implements FileService {
     @Autowired
     private FileListRepository fileListRepository;
@@ -32,19 +39,45 @@ public class FileServiceImpl implements FileService {
     private MongoTemplate mongoTemplate;
 
     @Autowired
+    private DiskFileDao diskFileDao;
+
+    @Autowired
     private UserService userService;
 
-    public PageInfo<FileListBean> findPageList(){
+    /**
+     * @param pageIndex
+     * @param pageSize
+     * @param userid
+     * @param pid
+     * @param typecode
+     * @param orderfield
+     * @param ordertype
+     * @return
+     */
+    @Override
+    public PageInfo<FileListBean> findPageList(Integer pageIndex, Integer pageSize, String userid, String pid, String typecode, String orderfield, String ordertype) {
         PageInfo<FileListBean> pageInfo = new PageInfo<>();
 
-        List<DiskFile> allFile = findAllFile();
-        for (DiskFile diskFile : allFile) {
+        Query query = new Query(Criteria.where("userid").is(userid));
+        query.addCriteria(Criteria.where("pid").is(pid));
+        Sort sort = Sort.by(Sort.Order.desc("createTime"));
+        Pageable pageable = PageRequest.of(pageIndex - 1, pageSize, sort);
+        query.with(pageable);
+        List<DiskFile> page = mongoTemplate.find(query, DiskFile.class);
+        List<DiskFile> all = mongoTemplate.findAll(DiskFile.class);
+        ArrayList<FileListBean> rows = new ArrayList<>();
+
+        for (DiskFile diskFile : page) {
             FileListBean fileListBean = new FileListBean();
 
-            // set
-            fileListBean.setId(diskFile.getId());
+
+            fileListBean.setId(diskFile.getId().toString());
             fileListBean.setPid(diskFile.getPid());
-            fileListBean.setPname(findOne(diskFile.getId()).getPname());
+            if (!"0".equals(diskFile.getPid())) {
+                fileListBean.setPname(findOne(diskFile.getPid()).getFilename());
+            } else {
+                fileListBean.setPname("");
+            }
             fileListBean.setFilename(diskFile.getFileName());
             fileListBean.setFilesize(diskFile.getFileSize());
             fileListBean.setFilesizename(CapacityUtils.convert(diskFile.getFileSize()));
@@ -52,170 +85,165 @@ public class FileServiceImpl implements FileService {
             fileListBean.setFilemd5(diskFile.getFileMd5());
             fileListBean.setFiletype(diskFile.getFileType());
             fileListBean.setCreateuserid(diskFile.getUserid());
-            fileListBean.setCreateusername(userService.findOne(diskFile.getUserid()).getUsername());
-            fileListBean.setCreatetime(diskFile.getCreateTime());
+//            fileListBean.setCreateusername(userService.findOne(diskFile.getUserid()).getUsername());
+            fileListBean.setCreateusername("test");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            fileListBean.setCreatetime(simpleDateFormat.format(diskFile.getCreateTime()));
 
-            pageInfo.getRows().add(fileListBean);
+            rows.add(fileListBean);
         }
+        pageInfo.setTotalPage((all.size() % pageSize) == 0 ? (long) (all.size() / pageSize) : (long) (all.size() / pageSize + 1))
+        ;
+        pageInfo.setPage(pageIndex);
+        pageInfo.setLimit(pageSize);
+        pageInfo.setTotalElements((long) all.size());
+        pageInfo.setRows(rows);
         return pageInfo;
     }
 
+    @Override
     public List<DiskFile> findAllFile() {
-        /*  32 */     return this.fileListRepository.findAll();
-        /*     */   }
+        return this.fileListRepository.findAll();
+    }
 
+    @Override
     public FileBean findOne(String id) {
-        FileBean fileBean = new FileBean();
-
-        Query query = Query.query((CriteriaDefinition)Criteria.where("id").is(id));
-        DiskFile targetFile = (DiskFile)this.mongoTemplate.findOne(query, DiskFile.class);
-
+        FileBean fileBean;
+        Query query = Query.query(Criteria.where("_id").is(new ObjectId(id)));
+        DiskFile targetFile = mongoTemplate.findOne(query, DiskFile.class);
         fileBean = diskFileToFileBean(targetFile);
         return fileBean;
     }
-/*     */   public FileBean diskFileToFileBean(DiskFile diskFile) {
-/*  47 */     FileBean fileBean = new FileBean();
-/*     */     
-/*  49 */     fileBean.setId(diskFile.getId());
-/*  50 */     fileBean.setPid(diskFile.getPid());
-/*     */     
-/*  52 */     Query queryPname = Query.query((CriteriaDefinition)Criteria.where("id").is(diskFile.getPid()));
-/*  53 */     DiskFile pFile = (DiskFile)this.mongoTemplate.findOne(queryPname, DiskFile.class);
-/*  54 */     fileBean.setPname(pFile.getFileName());
-/*     */     
-/*  56 */     fileBean.setFilename(diskFile.getFileName());
-/*  57 */     fileBean.setUploadDate(diskFile.getCreateTime());
-/*  58 */     fileBean.setFileSuffix(diskFile.getFileSuffix());
-/*  59 */     fileBean.setFilesize(diskFile.getFileSize().longValue());
-/*  60 */     fileBean.setUploadUserId(diskFile.getUserid());
-/*  61 */     fileBean.setFilemd5(diskFile.getFileMd5());
-/*  62 */     fileBean.setFiletype(diskFile.getFileType());
-/*     */     
-/*  64 */     Query queryUserName = Query.query((CriteriaDefinition)Criteria.where("id").is(diskFile.getUserid()));
-/*  65 */     UserDO user = (UserDO)this.mongoTemplate.findOne(queryUserName, UserDO.class);
-/*  66 */     fileBean.setUploadUserName(user.getUsername());
-/*     */     
-/*  68 */     return fileBean;
-/*     */   }
-/*     */ 
-/*     */   
-/*     */   public List<FileBean> findChildrenFiles(String userId, String folderId) {
-/*  73 */     return findChildrenFiles(folderId);
-/*     */   }
-/*     */   public List<FileBean> findChildrenFiles(String folderId) {
-/*  76 */     List<FileBean> children = new ArrayList<>();
-/*     */ 
-/*     */     
-/*  79 */     Query query = Query.query((CriteriaDefinition)Criteria.where("pid").is(folderId));
-/*  80 */     List<DiskFile> files = this.mongoTemplate.find(query, DiskFile.class);
-/*     */     
-/*  82 */     if (!files.isEmpty()) {
-/*  83 */       for (DiskFile file : files) {
-/*  84 */         children.add(diskFileToFileBean(file));
-/*     */       }
-/*     */     }
-/*  87 */     return children;
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public List<String> getChunksByFilemd5(String fileMd5) {
-/*  94 */     List<String> urls = new ArrayList<>();
-/*     */ 
-/*     */     
-/*  97 */     Query query = Query.query((CriteriaDefinition)Criteria.where("filemd5").is(fileMd5));
-/*  98 */     List<DiskMd5Chunk> chunks = this.mongoTemplate.find(query, DiskMd5Chunk.class);
-/*     */     
-/* 100 */     Collections.sort(chunks, new Comparator<DiskMd5Chunk>()
-/*     */         {
-/*     */           public int compare(DiskMd5Chunk chunk1, DiskMd5Chunk chunk2) {
-/* 103 */             return chunk1.getChunkNumber().intValue() - chunk2.getChunkNumber().intValue();
-/*     */           }
-/*     */         });
-/* 106 */     Collections.sort(chunks, Comparator.comparingInt(DiskMd5Chunk::getChunkNumber));
-/*     */     
-/* 108 */     for (DiskMd5Chunk chunk : chunks) {
-/* 109 */       urls.add(chunk.getStorePath());
-/*     */     }
-/* 111 */     return urls;
-/*     */   }
-/*     */ 
-/*     */   
-/*     */   public byte[] getBytesByUrl(String url) throws IOException {
-/* 116 */     FileInputStream input = new FileInputStream(url);
-/* 117 */     ByteArrayOutputStream output = new ByteArrayOutputStream();
-/*     */     
-/* 119 */     IOUtils.copyLarge(input, output);
-/* 120 */     return output.toByteArray();
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public void saveFile(DiskFile file) {
-/* 127 */     this.fileListRepository.save(file);
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public void deleteFile(String filename) {
-/* 133 */     Query query = Query.query((CriteriaDefinition)Criteria.where("filename").is(filename));
-/*     */ 
-/*     */ 
-/*     */     
-/* 137 */     this.mongoTemplate.remove(query, DiskFile.class);
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public DownloadBean getDownloadInfo(List<String> fileIds) {
-/* 144 */     if (CollectionUtils.isEmpty(fileIds)) {
-/* 145 */       throw new RuntimeException("请选择下载记录");
-/*     */     }
-/* 147 */     DownloadBean bean = new DownloadBean();
-/* 148 */     bean.setFileNum(Integer.valueOf(0));
-/* 149 */     bean.setFolderNum(Integer.valueOf(0));
-/* 150 */     bean.setTotalSize(0L);
-/*     */     
-/* 152 */     for (String fileId : fileIds) {
-/*     */       
-/* 154 */       Query query = Query.query((CriteriaDefinition)Criteria.where("id").is(fileId));
-/* 155 */       DiskFile file = (DiskFile)this.mongoTemplate.findOne(query, DiskFile.class);
-/* 156 */       bean.setTotalSize(bean.getTotalSize() + file.getFileSize().longValue());
-/* 157 */       if (file.getFileType().intValue() == 1) {
-/*     */         
-/* 159 */         bean.setFileNum(Integer.valueOf(bean.getFileNum().intValue() + 1));
-/* 160 */       } else if (file.getFileType().intValue() == 0) {
-/*     */         
-/* 162 */         bean.setFolderNum(Integer.valueOf(bean.getFolderNum().intValue() + 1));
-/*     */       } 
-/* 164 */       dgGetDownloadInfo(file.getId(), bean);
-/*     */     } 
-/* 166 */     return bean;
-/*     */   }
-/*     */   
-/*     */   private void dgGetDownloadInfo(String id, DownloadBean bean) {
-/* 170 */     List<FileBean> childrenFiles = findChildrenFiles(id);
-/*     */     
-/* 172 */     if (!CollectionUtils.isEmpty(childrenFiles))
-/* 173 */       for (FileBean file : childrenFiles) {
-/* 174 */         bean.setTotalSize(bean.getTotalSize() + file.getFilesize());
-/* 175 */         if (file.getFiletype().intValue() == 1) {
-/*     */           
-/* 177 */           bean.setFileNum(Integer.valueOf(bean.getFileNum().intValue() + 1));
-/* 178 */         } else if (file.getFiletype().intValue() == 0) {
-/*     */           
-/* 180 */           bean.setFolderNum(Integer.valueOf(bean.getFolderNum().intValue() + 1));
-/*     */         } 
-/* 182 */         dgGetDownloadInfo(file.getId(), bean);
-/*     */       }  
-/*     */   }
-/*     */ }
+
+    /**
+     * 将DiskFile类转换为FileBean类
+     *
+     * @param diskFile
+     * @return
+     */
+    public FileBean diskFileToFileBean(DiskFile diskFile) {
+        FileBean fileBean = new FileBean();
+        fileBean.setId(diskFile.getId().toString());
+        // 将fileBean的父id设为diskFile的父id
+        fileBean.setPid(diskFile.getPid());
+        // 通过父id来查找父文件夹的名字, 如果父id==0, 则该文件存在于根目录下
+        String pName;
+        Query queryPname = Query.query(Criteria.where("_id").is(diskFile.getPid()));
+        DiskFile pFile = this.mongoTemplate.findOne(queryPname, DiskFile.class);
+        pName = pFile == null ? "" : pFile.getFileName();
+        fileBean.setPname(pName);
+        fileBean.setFilename(diskFile.getFileName());
+        fileBean.setUploadDate(diskFile.getCreateTime());
+        fileBean.setFileSuffix(diskFile.getFileSuffix());
+        fileBean.setFilesize(diskFile.getFileSize());
+        fileBean.setUploadUserId(diskFile.getUserid());
+        fileBean.setFilemd5(diskFile.getFileMd5());
+        fileBean.setFiletype(diskFile.getFileType());
+        Query queryUserName = Query.query((Criteria.where("username").is(diskFile.getUserid())));
+        UserDO user = mongoTemplate.findOne(queryUserName, UserDO.class);
+        fileBean.setUploadUserName(user.getUsername());
+
+        return fileBean;
+    }
 
 
-/* Location:              D:\workspace\IDEA\disk - 副本\target\classes\!\co\\ustc\download\service\impl\FileServiceImpl.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+    @Override
+    public List<FileBean> findChildrenFiles(String userId, String folderId) {
+        return findChildrenFiles(folderId);
+    }
+
+
+    @Override
+    public List<FileBean> findChildrenFiles(String folderId) {
+        List<FileBean> children = new ArrayList<>();
+        Query query = Query.query((CriteriaDefinition) Criteria.where("pid").is(folderId));
+        List<DiskFile> files = this.mongoTemplate.find(query, DiskFile.class);
+        if (!files.isEmpty()) {
+            for (DiskFile file : files) {
+                children.add(diskFileToFileBean(file));
+            }
+        }
+        return children;
+    }
+
+    @Override
+    public List<String> getChunksByFilemd5(String fileMd5) {
+        List<String> urls = new ArrayList<>();
+        Query query = Query.query(Criteria.where("fileMd5").is(fileMd5));
+        List<DiskMd5Chunk> chunks = this.mongoTemplate.find(query, DiskMd5Chunk.class);
+        Collections.sort(chunks, new Comparator<DiskMd5Chunk>() {
+            @Override
+            public int compare(DiskMd5Chunk chunk1, DiskMd5Chunk chunk2) {
+                return chunk1.getChunkNumber().intValue() - chunk2.getChunkNumber().intValue();
+            }
+        });
+        Collections.sort(chunks, Comparator.comparingInt(DiskMd5Chunk::getChunkNumber));
+        /*     */
+        /* 108 */
+        for (DiskMd5Chunk chunk : chunks) {
+            /* 109 */
+            urls.add(chunk.getStorePath());
+            /*     */
+        }
+        /* 111 */
+        return urls;
+        /*     */
+    }
+
+    @Override
+    public byte[] getBytesByUrl(String url) throws IOException {
+        FileInputStream input = new FileInputStream(url);
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        IOUtils.copyLarge(input, output);
+        return output.toByteArray();
+    }
+
+    @Override
+    public void saveFile(DiskFile file) {
+        this.fileListRepository.save(file);
+    }
+
+
+    public void deleteFile(String filename) {
+        Query query = Query.query((CriteriaDefinition) Criteria.where("filename").is(filename));
+        this.mongoTemplate.remove(query, DiskFile.class);
+    }
+
+    @Override
+    public DownloadBean getDownloadInfo(List<String> fileIds) {
+        if (CollectionUtils.isEmpty(fileIds)) {
+            throw new RuntimeException("请选择下载记录");
+        }
+        DownloadBean bean = new DownloadBean();
+        bean.setFileNum(Integer.valueOf(0));
+        bean.setFolderNum(Integer.valueOf(0));
+        bean.setTotalSize(0L);
+        for (String fileId : fileIds) {
+            Query query = Query.query(Criteria.where("id").is(fileId));
+            DiskFile file = this.mongoTemplate.findOne(query, DiskFile.class);
+            bean.setTotalSize(bean.getTotalSize() + file.getFileSize().longValue());
+            if (file.getFileType().intValue() == 1) {
+                bean.setFileNum(Integer.valueOf(bean.getFileNum().intValue() + 1));
+            } else if (file.getFileType().intValue() == 0) {
+                bean.setFolderNum(Integer.valueOf(bean.getFolderNum().intValue() + 1));
+            }
+            dgGetDownloadInfo(file.getId().toString(), bean);
+        }
+        return bean;
+    }
+
+    private void dgGetDownloadInfo(String id, DownloadBean bean) {
+        List<FileBean> childrenFiles = findChildrenFiles(id);
+        if (!CollectionUtils.isEmpty(childrenFiles)) {
+            for (FileBean file : childrenFiles) {
+                bean.setTotalSize(bean.getTotalSize() + file.getFilesize());
+                if (file.getFiletype().intValue() == 1) {
+                    bean.setFileNum(Integer.valueOf(bean.getFileNum().intValue() + 1));
+                } else if (file.getFiletype().intValue() == 0) {
+                    bean.setFolderNum(Integer.valueOf(bean.getFolderNum().intValue() + 1));
+                }
+                dgGetDownloadInfo(file.getId(), bean);
+            }
+        }
+    }
+}

@@ -19,35 +19,48 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    // 根据id查询用户
+    /**
+     * 根据id查询用户
+     * @param id 用户id
+     * @return User
+     */
+    @Override
     public UserDO findOne(String id){
-        Query id1 = Query.query(Criteria.where("id").is(id));
+        Query id1 = Query.query(Criteria.where("_id").is(id));
         UserDO one = mongoTemplate.findOne(id1, UserDO.class);
         return one;
     }
 
-    // 保存用户
+    /**
+     * 保存用户
+     * @param admin 用户
+     */
+    @Override
     public void saveAdmin(UserDO admin){
         // 可以设置一些默认值
         userRepository.save(admin);
     }
-    //
-//    // 更新用户信息
-//    public void updateAdmin(Admin admin){
-//        adminRepository.save(admin);
-//    }
-//
-    // 删除用户
+
+    @Override
     public void deleteAdminById(String id){
         userRepository.deleteById(id);
     }
 
-    // 查询所有用户，包括普通用户和管理员
+
+    /**
+     * 查询所有用户，包括普通用户和管理员
+     * @return 所有用户信息
+     */
+    @Override
     public List<UserDO> findAllAdmin(){
         return userRepository.findAll();
     }
 
-    // 查询所有普通用户
+    /**
+     * 查询所有普通用户
+     * @return 所有普通用户信息
+     */
+    @Override
     public List<UserDO> findAllUser(){
         // 查询条件
         Query query = Query.query(Criteria.where("type").is("user"));
@@ -55,7 +68,11 @@ public class UserServiceImpl implements UserService {
         return mongoTemplate.find(query, UserDO.class);
     }
 
-    // 查询所有管理员
+    /**
+     * 查询所有管理员信息
+     * @return 查询所有管理员信息
+     */
+    @Override
     public List<UserDO> findAllManage(){
         // 查询条件
         Query query = Query.query(Criteria.where("type").is("manage"));
@@ -63,8 +80,12 @@ public class UserServiceImpl implements UserService {
         return mongoTemplate.find(query, UserDO.class);
     }
 
-    // 用于用户名和密码验证
-    // 根据用户名查询密码
+    /**
+     * 根据用户名查询密码
+     * @param username 用户名
+     * @return 密码
+     */
+    @Override
     public String getPasswordByUsername(String username){
         // 根据用户名查询用户
         Query query = Query.query(Criteria.where("username").is(username));

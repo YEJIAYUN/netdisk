@@ -1,89 +1,84 @@
-/*    */ package com.ustc.entity;
-/*    */ 
-/*    */ import java.io.Serializable;
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ public class DownloadBean
-/*    */   implements Serializable
-/*    */ {
-/*    */   private Integer fileNum;
-/*    */   private Integer folderNum;
-/*    */   private long totalSize;
-/*    */   private String totalSizeName;
-/*    */   private Integer isBig;
-/*    */   
-/*    */   public DownloadBean() {}
-/*    */   
-/*    */   public DownloadBean(Integer fileNum, Integer folderNum, long totalSize, String totalSizeName, Integer isBig) {
-/* 29 */     this.fileNum = fileNum;
-/* 30 */     this.folderNum = folderNum;
-/* 31 */     this.totalSize = totalSize;
-/* 32 */     this.totalSizeName = totalSizeName;
-/* 33 */     this.isBig = isBig;
-/*    */   }
-/*    */ 
-/*    */   
-/*    */   public Integer getFileNum() {
-/* 38 */     return this.fileNum;
-/*    */   }
-/*    */   
-/*    */   public void setFileNum(Integer fileNum) {
-/* 42 */     this.fileNum = fileNum;
-/*    */   }
-/*    */   
-/*    */   public Integer getFolderNum() {
-/* 46 */     return this.folderNum;
-/*    */   }
-/*    */   
-/*    */   public void setFolderNum(Integer folderNum) {
-/* 50 */     this.folderNum = folderNum;
-/*    */   }
-/*    */   
-/*    */   public long getTotalSize() {
-/* 54 */     return this.totalSize;
-/*    */   }
-/*    */   
-/*    */   public void setTotalSize(long totalSize) {
-/* 58 */     this.totalSize = totalSize;
-/*    */   }
-/*    */   
-/*    */   public String getTotalSizeName() {
-/* 62 */     return this.totalSizeName;
-/*    */   }
-/*    */   
-/*    */   public void setTotalSizeName(String totalSizeName) {
-/* 66 */     this.totalSizeName = totalSizeName;
-/*    */   }
-/*    */   
-/*    */   public Integer getIsBig() {
-/* 70 */     return this.isBig;
-/*    */   }
-/*    */   
-/*    */   public void setIsBig(Integer isBig) {
-/* 74 */     this.isBig = isBig;
-/*    */   }
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */   
-/*    */   public String toString() {
-/* 81 */     return "DownloadBean{fileNum=" + this.fileNum + ", folderNum=" + this.folderNum + ", totalSize=" + this.totalSize + ", totalSizeName='" + this.totalSizeName + '\'' + ", isBig=" + this.isBig + '}';
-/*    */   }
-/*    */ }
 
+package com.ustc.entity;
 
-/* Location:              D:\workspace\IDEA\disk - 副本\target\classes\!\co\\ustc\entity\DownloadBean.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
+import java.io.Serializable;
+
+/**
+ * @author 李芝赟
  */
+public class DownloadBean implements Serializable {
+    private Integer fileNum;
+    private Integer folderNum;
+    private long totalSize;
+    private String totalSizeName;
+    private Integer isBig;
+
+    public DownloadBean() {
+    }
+
+    public DownloadBean(Integer fileNum, Integer folderNum, long totalSize, String totalSizeName, Integer isBig) {
+        this.fileNum = fileNum;
+        this.folderNum = folderNum;
+        this.totalSize = totalSize;
+        this.totalSizeName = totalSizeName;
+        this.isBig = isBig;
+    }
+
+
+    public Integer getFileNum() {
+        return this.fileNum;
+    }
+
+
+    public void setFileNum(Integer fileNum) {
+        this.fileNum = fileNum;
+    }
+
+
+    public Integer getFolderNum() {
+        return this.folderNum;
+    }
+
+
+    public void setFolderNum(Integer folderNum) {
+        this.folderNum = folderNum;
+    }
+
+
+    public long getTotalSize() {
+        return this.totalSize;
+    }
+
+
+    public void setTotalSize(long totalSize) {
+        this.totalSize = totalSize;
+    }
+
+
+    public String getTotalSizeName() {
+        return this.totalSizeName;
+    }
+
+
+    public void setTotalSizeName(String totalSizeName) {
+        this.totalSizeName = totalSizeName;
+    }
+
+
+    public Integer getIsBig() {
+        return this.isBig;
+    }
+
+
+    public void setIsBig(Integer isBig) {
+        this.isBig = isBig;
+    }
+
+
+    public String toString() {
+
+        return "DownloadBean{fileNum=" + this.fileNum + ", folderNum=" + this.folderNum + ", totalSize=" + this.totalSize + ", totalSizeName='" + this.totalSizeName + '\'' + ", isBig=" + this.isBig + '}';
+
+    }
+
+}
