@@ -1,43 +1,18 @@
 package com.ustc.entity;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
+/**
+ * @author 李芝赟
+ */
 @Document(collection = "User")
 public class UserDO {
-    public static class Profile {
-        /**
-         * 昵称
-         */
-        private String nickname;
-        /**
-         * 性别
-         */
-        private String gender;
-
-        public String getNickname() {
-            return nickname;
-        }
-
-        public Profile setNickname(String nickname) {
-            this.nickname = nickname;
-            return this;
-        }
-
-        public String getGender() {
-            return gender;
-        }
-
-        public Profile setGender(String gender) {
-            this.gender = gender;
-            return this;
-        }
-    }
-
     @Id
-    private Integer id;
+    private ObjectId id;
     /**
      * 用户名
      */
@@ -55,11 +30,11 @@ public class UserDO {
      */
     private Profile profile;
 
-    public Integer getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public UserDO setId(Integer id) {
+    public UserDO setId(ObjectId id) {
         this.id = id;
         return this;
     }
@@ -98,5 +73,34 @@ public class UserDO {
     public UserDO setProfile(Profile profile) {
         this.profile = profile;
         return this;
+    }
+
+    public static class Profile {
+        /**
+         * 昵称
+         */
+        private String nickname;
+        /**
+         * 性别
+         */
+        private String gender;
+
+        public String getNickname() {
+            return nickname;
+        }
+
+        public Profile setNickname(String nickname) {
+            this.nickname = nickname;
+            return this;
+        }
+
+        public String getGender() {
+            return gender;
+        }
+
+        public Profile setGender(String gender) {
+            this.gender = gender;
+            return this;
+        }
     }
 }

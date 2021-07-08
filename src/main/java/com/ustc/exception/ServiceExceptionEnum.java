@@ -25,6 +25,7 @@ public enum ServiceExceptionEnum {
     FOLDER_CREATE_FAIL(1001002, "服务器创建文件夹失败"),
     // 下载模块
     // 用户模块
+    PASSWORD_WRONG(1003000,"密码错误"),
     // 工具类
     VALIDATE_ERROR(2004000, "参数校验异常")
     ;

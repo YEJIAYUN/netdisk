@@ -1,46 +1,32 @@
 package com.ustc.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * @author 叶嘉耘
  */
+@ApiModel
 public class MergeFileBean implements Serializable {
-    /**
-     * 文件夹pid, 上传到哪个文件夹
-     */
+    @ApiModelProperty(value = "前端生成的文件夹pid", required = true)
     private String pid;
-    /**
-     * 前端上传uuid
-     */
+    @ApiModelProperty(value = "前端生成的uuid", required = true)
     private String uuid;
-    /**
-     * 前端上传文件id
-     */
+    @ApiModelProperty(value = "前端生成的文件id", required = true)
     private String fileid;
-    /**
-     * 文件名
-     */
+    @ApiModelProperty(value = "文件名", required = true)
     private String filename;
-    /**
-     * 文件大小
-     */
+    @ApiModelProperty(value = "文件大小", required = true, example = "1")
     private Long totalSize;
-    /**
-     * 文件md5
-     */
+    @ApiModelProperty(value = "文件md5", required = true)
     private String filemd5;
-    /**
-     * 用于文件夹上传时,保存相对路径
-     */
+    @ApiModelProperty(value = "用于文件夹上传时,保存文件夹结构相对路径")
     private String relativepath;
-    /**
-     * 用户id
-     */
+    @ApiModelProperty(value = "用户id", required = true)
     private String userid;
-    /**
-     * 用户名
-     */
+    @ApiModelProperty(value = "用户名", required = true)
     private String username;
 
     public String getPid() {

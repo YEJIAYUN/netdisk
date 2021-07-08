@@ -1,5 +1,9 @@
 package com.ustc.chain.core;
 
+import org.apache.solr.client.solrj.SolrServerException;
+
+import java.io.IOException;
+
 /**
  * 责任链中的处理器
  * @author 叶嘉耘
@@ -38,5 +42,5 @@ public abstract class Handler {
      * @param request 请求
      * @param response 响应
      */
-    public abstract void doHandler(ContextRequest request, ContextResponse response);
+    public abstract void doHandler(ContextRequest request, ContextResponse response) throws SolrServerException, IOException;
 }

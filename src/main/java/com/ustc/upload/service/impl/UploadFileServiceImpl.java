@@ -13,11 +13,14 @@ import com.ustc.lock.Lock;
 import com.ustc.upload.dao.DiskMd5Dao;
 import com.ustc.upload.service.UploadFileService;
 import com.ustc.utils.SpringContentUtils;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
 
 /**
  * @author 叶嘉耘
@@ -31,7 +34,7 @@ public class UploadFileServiceImpl implements UploadFileService {
     private DiskMd5Dao diskMd5Dao;
 
     @Override
-    public void uploadChunk(Chunk chunk) {
+    public void uploadChunk(Chunk chunk) throws SolrServerException, IOException {
         // 1. 参数转换, 将chunk转换为责任链中的Request
         ChunkRequest chunkRequest = new ChunkRequest();
         BeanUtils.copyProperties(chunk, chunkRequest);
@@ -71,7 +74,7 @@ public class UploadFileServiceImpl implements UploadFileService {
      * @param bean
      */
     @Override
-    public void mergeChunk(MergeFileBean bean) {
+    public void mergeChunk(MergeFileBean bean) throws SolrServerException, IOException {
         // 1. 获取文件的md5, 将其当作锁
         String lockname = bean.getFilemd5();
         System.out.println(bean.getFilemd5());
@@ -114,6 +117,7 @@ public class UploadFileServiceImpl implements UploadFileService {
                     //9.保存disk_file表
                     line.addLast(scu.getHandler(MergeSaveToDiskFileHandler.class));
                     //10.新增Solr, 方便后面进行文件搜索
+//                    line.addLast(scu.getHandler(MergeSolrHandler.class));
                     //11.删除Redis记录
                     line.addLast(scu.getHandler(MergeDelRedisHandler.class));
                 }
@@ -121,6 +125,4 @@ public class UploadFileServiceImpl implements UploadFileService {
             chain.execute();
         }
     }
-
-
 }
