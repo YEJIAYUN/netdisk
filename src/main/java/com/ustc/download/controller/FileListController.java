@@ -1,25 +1,14 @@
 package com.ustc.download.controller;
 
 import com.ustc.download.service.FileService;
-import com.ustc.entity.DiskFile;
-
-import java.text.FieldPosition;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import com.ustc.entity.FileListBean;
 import com.ustc.entity.PageInfo;
-import com.ustc.entity.SessionUserBean;
 import com.ustc.utils.CommonResult;
 import com.ustc.utils.CommonResultUtils;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

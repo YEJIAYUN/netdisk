@@ -1,5 +1,6 @@
 package com.ustc.chain.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ustc.chain.core.ContextRequest;
 import com.ustc.chain.core.ContextResponse;
 import com.ustc.chain.core.Handler;
@@ -27,7 +28,7 @@ public class MergeGetChunkHandler extends Handler {
     private StringRedisTemplate stringRedisTemplate;
 
     @Override
-    public void doHandler(ContextRequest request, ContextResponse response) {
+    public void doHandler(ContextRequest request, ContextResponse response) throws JsonProcessingException {
         if (request instanceof MergeRequest) {
             MergeRequest bean = (MergeRequest) request;
 
@@ -41,10 +42,12 @@ public class MergeGetChunkHandler extends Handler {
             // 通过模糊查询将存在redis中的块记录取出来
             String key = userid + "-" + uuid + "-" + fileId + "-" + filename + "-*";
             Set<String> keys = stringRedisTemplate.keys(key);
-            for (String tempKey : keys) {
-                String redisChunkTempStr = stringRedisTemplate.opsForValue().get(tempKey);
-                RedisChunkTemp redisChunkTemp = JsonUtils.jsonToPojo(redisChunkTempStr, RedisChunkTemp.class);
-                temps.add(redisChunkTemp);
+            if (keys != null) {
+                for (String tempKey : keys) {
+                    String redisChunkTempStr = stringRedisTemplate.opsForValue().get(tempKey);
+                    RedisChunkTemp redisChunkTemp = JsonUtils.jsonToPojo(redisChunkTempStr, RedisChunkTemp.class);
+                    temps.add(redisChunkTemp);
+                }
             }
 
             bean.setChunkTemps(temps);

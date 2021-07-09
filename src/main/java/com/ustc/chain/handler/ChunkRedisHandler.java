@@ -1,5 +1,6 @@
 package com.ustc.chain.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ustc.chain.core.ContextRequest;
 import com.ustc.chain.core.ContextResponse;
 import com.ustc.chain.core.Handler;
@@ -26,7 +27,7 @@ public class ChunkRedisHandler extends Handler {
     private StringRedisTemplate stringRedisTemplate;
 
     @Override
-    public void doHandler(ContextRequest request, ContextResponse response) {
+    public void doHandler(ContextRequest request, ContextResponse response) throws JsonProcessingException {
         if (request instanceof ChunkRequest) {
             ChunkRequest chunk = (ChunkRequest) request;
 

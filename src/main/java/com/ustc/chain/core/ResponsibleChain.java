@@ -22,7 +22,7 @@ public class ResponsibleChain {
         handlerInitializer.initChannel(handlerInitializer);
     }
 
-    public ContextResponse execute() throws SolrServerException, IOException {
+    public ContextResponse execute() throws IOException {
         // 执行责任链
         execHandler(handlerInitializer.getFirstHandler(), ContextHolder.getReq(),ContextHolder.getResp());
 
@@ -36,7 +36,7 @@ public class ResponsibleChain {
         return resp;
     }
 
-    private void execHandler(Handler handler, ContextRequest request, ContextResponse response) throws SolrServerException, IOException {
+    private void execHandler(Handler handler, ContextRequest request, ContextResponse response) throws IOException {
         // 执行当前结点处理
         handler.doHandler(request, response);
         // 如果存在下一个结点,则处理下一个结点

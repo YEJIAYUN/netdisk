@@ -2,6 +2,9 @@ package com.ustc.utils;
 
 import com.ustc.exception.ServiceException;
 import com.ustc.exception.ServiceExceptionEnum;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author 叶嘉耘
@@ -23,6 +26,12 @@ public class ValidateUtils {
 
     public static void validate(Integer name, String msg) {
         if (name == null) {
+            throw new ServiceException(ServiceExceptionEnum.VALIDATE_ERROR.setMessage(msg + "不能为空"));
+        }
+    }
+
+    public static void validate(List list, String msg) {
+        if (CollectionUtils.isEmpty(list)) {
             throw new ServiceException(ServiceExceptionEnum.VALIDATE_ERROR.setMessage(msg + "不能为空"));
         }
     }

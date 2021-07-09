@@ -14,6 +14,7 @@ public enum ServiceExceptionEnum {
      *      002 - 下载模块
      *      003 - 用户模块
      *      004 - 工具类
+     *      005 - 通用模块
      * 第5-7位, 错误码:
      */
     SUCCESS(0, "成功"),
@@ -27,7 +28,9 @@ public enum ServiceExceptionEnum {
     // 用户模块
     PASSWORD_WRONG(1003000,"密码错误"),
     // 工具类
-    VALIDATE_ERROR(2004000, "参数校验异常")
+    VALIDATE_ERROR(2004000, "参数校验异常"),
+    //通用模块
+    SAME_NAME_EXIST(1005000, "存在同名同类型记录")
     ;
 
     /**

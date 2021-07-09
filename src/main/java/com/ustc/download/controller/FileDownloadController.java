@@ -2,34 +2,35 @@ package com.ustc.download.controller;
 
 import com.ustc.config.StoreConfiguration;
 import com.ustc.download.service.FileService;
-/*     */ import com.ustc.entity.DownloadBean;
-/*     */ import com.ustc.entity.FileBean;
-/*     */ import com.ustc.entity.SessionUserBean;
-/*     */ import com.ustc.utils.*;
-/*     */
-/*     */
-/*     */
-/*     */
-/*     */ import io.swagger.annotations.Api;
-/*     */ import io.swagger.annotations.ApiImplicitParam;
-/*     */ import io.swagger.annotations.ApiImplicitParams;
-/*     */ import io.swagger.annotations.ApiOperation;
-/*     */ import java.io.File;
-/*     */ import java.io.FileInputStream;
-/*     */ import java.io.FileOutputStream;
-/*     */ import java.io.IOException;
-/*     */ import java.io.UnsupportedEncodingException;
-/*     */ import java.net.URLEncoder;
-/*     */ import java.util.ArrayList;
-/*     */ import java.util.Arrays;
+import com.ustc.entity.DownloadBean;
+import com.ustc.entity.FileBean;
+import com.ustc.entity.SessionUserBean;
+import com.ustc.utils.*;
+
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-/*     */ import javax.servlet.ServletOutputStream;
-/*     */ import javax.servlet.http.HttpServletRequest;
-/*     */ import javax.servlet.http.HttpServletResponse;
-/*     */ import org.springframework.beans.factory.annotation.Autowired;
-/*     */ import org.springframework.beans.factory.annotation.Value;
-/*     */ import org.springframework.util.CollectionUtils;
-/*     */ import org.springframework.web.bind.annotation.*;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author 李芝赟
@@ -64,7 +65,7 @@ public class FileDownloadController {
         if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
             filename = URLEncoder.encode(filename, "UTF-8");
         } else {
-            filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+            filename = new String(filename.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         }
 
         response.setHeader("content-disposition", "attachment;filename=" + filename);
@@ -204,7 +205,7 @@ public class FileDownloadController {
         if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
             filename = URLEncoder.encode(filename, "UTF-8");
         } else {
-            filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+            filename = new String(filename.getBytes(StandardCharsets.UTF_8),  StandardCharsets.ISO_8859_1);
         }
         response.setHeader("content-disposition", "attachment;filename=" + filename);
         ServletOutputStream servletOutputStream = response.getOutputStream();

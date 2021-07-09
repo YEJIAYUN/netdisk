@@ -1,11 +1,15 @@
 package com.ustc.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Json转换工具
+ *
  * @author 叶嘉耘
  */
 @Component
@@ -22,13 +26,8 @@ public class JsonUtils {
      * @param data 数据
      * @return 对应的Json字符串
      */
-    public static String objectToJson(Object data) {
-        try {
-            return MAPPER.writeValueAsString(data);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static String objectToJson(Object data) throws JsonProcessingException {
+        return MAPPER.writeValueAsString(data);
     }
 
     /**
@@ -38,14 +37,12 @@ public class JsonUtils {
      * @param beanType 对象类型
      * @return 返回对象
      */
-    public static <T> T jsonToPojo(String jsonData, Class<T> beanType) {
-        try {
-            return MAPPER.readValue(jsonData, beanType);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static <T> T jsonToPojo(String jsonData, Class<T> beanType) throws JsonProcessingException {
+        return MAPPER.readValue(jsonData, beanType);
     }
 
-
+    public static <T> List<T> jsonToList(String jsonData, Class<T> beanType) throws JsonProcessingException {
+        JavaType javaType = MAPPER.getTypeFactory().constructParametricType(List.class, beanType);
+        return MAPPER.readValue(jsonData, javaType);
+    }
 }

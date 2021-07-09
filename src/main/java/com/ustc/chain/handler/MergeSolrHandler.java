@@ -35,7 +35,7 @@ public class MergeSolrHandler extends Handler {
     private DiskFileDao diskFileDao;
 
     @Override
-    public void doHandler(ContextRequest request, ContextResponse response) throws SolrServerException, IOException {
+    public void doHandler(ContextRequest request, ContextResponse response) throws IOException {
         if (request instanceof MergeRequest) {
             MergeRequest bean = (MergeRequest) request;
 
@@ -73,7 +73,11 @@ public class MergeSolrHandler extends Handler {
                     fileSearchBean.setCreateusername(diskFile.getUserid());
                     fileSearchBean.setCreatetime(DateUtils.formatDate(diskFile.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
 
-                    fileSearchService.add(fileSearchBean);
+                    try {
+                        fileSearchService.add(fileSearchBean);
+                    } catch (SolrServerException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             // 对文件的操作
@@ -97,7 +101,11 @@ public class MergeSolrHandler extends Handler {
                 fileSearchBean.setCreateuserid(bean.getUserid());
                 fileSearchBean.setCreateusername(bean.getUsername());
                 fileSearchBean.setCreatetime(DateUtils.formatDate(new Date()));
-                fileSearchService.add(fileSearchBean);
+                try {
+                    fileSearchService.add(fileSearchBean);
+                } catch (SolrServerException e) {
+                    e.printStackTrace();
+                }
             }
         } else {
             throw new ServiceException(ServiceExceptionEnum.PARAM_ERROR);

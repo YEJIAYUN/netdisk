@@ -1,5 +1,6 @@
 package com.ustc.mvc;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ustc.exception.ServiceException;
 import com.ustc.utils.CommonResult;
 import com.ustc.utils.CommonResultUtils;
@@ -48,7 +49,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseBody
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public CommonResult missingServletRequestParameterExceptionHandler(HttpServletRequest req, ServiceException ex) {
+    public CommonResult<String> missingServletRequestParameterExceptionHandler(HttpServletRequest req, ServiceException ex) {
         logger.debug("[missingServletRequestParameterExceptionHandler]", ex);
         return CommonResultUtils.error(ex.getCode(), ex.getMessage());
     }
@@ -62,9 +63,16 @@ public class GlobalExceptionHandler {
      */
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
-    public CommonResult exceptionHandler(HttpServletRequest req, Exception ex) {
+    public CommonResult<String> exceptionHandler(HttpServletRequest req, Exception ex) {
         logger.error("[exceptionHandler]", ex);
         // 代补充
+        return CommonResultUtils.error(500, ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(value = JsonProcessingException.class)
+    public CommonResult<String> jsonProcessingException(HttpServletRequest req, Exception ex) {
+        logger.debug("Json数据转换异常", ex);
         return CommonResultUtils.error(500, ex.getMessage());
     }
 }
