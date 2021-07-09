@@ -1,7 +1,11 @@
 package com.ustc.config;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -17,6 +21,33 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfiguration {
 
+    private static final String SPLITOR = ";";
+
+    /**
+     * 切割扫描的包生成Predicate<RequestHandler>
+     *
+     * @param basePackage
+     * @return
+     */
+    public static Predicate<RequestHandler> scanBasePackage(final String basePackage) {
+        if (StringUtils.isBlank(basePackage)) {
+            throw new NullPointerException("basePackage不能为空，多个包扫描使用" + SPLITOR + "分隔");
+        }
+        String[] controllerPack = basePackage.split(SPLITOR);
+        Predicate<RequestHandler> predicate = null;
+        for (int i = controllerPack.length - 1; i >= 0; i--) {
+            String strBasePackage = controllerPack[i];
+            if (StringUtils.isNotBlank(strBasePackage)) {
+                Predicate<RequestHandler> tempPredicate = RequestHandlerSelectors.basePackage(strBasePackage);
+                predicate = predicate == null ? tempPredicate : Predicates.or(tempPredicate, predicate);
+            }
+        }
+        if (predicate == null) {
+            throw new NullPointerException("basePackage配置不正确，多个包扫描使用" + SPLITOR + "分隔");
+        }
+        return predicate;
+    }
+
     @Bean
     public Docket createRestApi() {
         //文档类型,Swagger
@@ -25,7 +56,10 @@ public class SwaggerConfiguration {
                 .apiInfo(this.apiInfo())
                 // 扫描controller, 获取API接口
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ustc.upload.controller"))
+                .apis(scanBasePackage("com.ustc.upload.controller" + SPLITOR +
+                        "com.ustc.download.controller" + SPLITOR +
+                        "com.ustc.filecommon.controller" + SPLITOR +
+                        "com.ustc.login.controller"))
                 .paths(PathSelectors.any())
                 // 构建出Docket对象
                 .build();
@@ -33,6 +67,7 @@ public class SwaggerConfiguration {
 
     /**
      * 创建API基本信息
+     *
      * @return API信息
      */
     private ApiInfo apiInfo() {

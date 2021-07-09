@@ -66,7 +66,7 @@ public class FileUploadController {
     }
 
     @ApiOperation("检查文件是否存在")
-    @ApiImplicitParam(name = "filemd5", value = "文件md5", dataTypeClass = String.class)
+    @ApiImplicitParam(name = "filemd5", value = "文件md5", dataTypeClass = String.class, required = true)
     @PostMapping("/checkFile")
     public CommonResult<Integer> checkFile(String filemd5) {
         return CommonResultUtils.success(uploadFileService.checkFile(filemd5));

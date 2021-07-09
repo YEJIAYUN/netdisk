@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -43,7 +44,7 @@ public class LoginController {
     })
     @PostMapping("/login")
     public CommonResult<String> login(String username, String password,
-                                      Model model, HttpSession httpSession) {
+                                      @ApiIgnore HttpSession httpSession) {
         // 正确的密码
         String correctPasswd = userService.getPasswordByUsername(username);
 

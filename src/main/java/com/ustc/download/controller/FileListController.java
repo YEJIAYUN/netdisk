@@ -5,6 +5,7 @@ import com.ustc.entity.FileListBean;
 import com.ustc.entity.PageInfo;
 import com.ustc.utils.CommonResult;
 import com.ustc.utils.CommonResultUtils;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author 李芝赟
  */
+@Api(tags = "列表展示")
 @RestController
 @RequestMapping("/disk/file")
 public class FileListController {

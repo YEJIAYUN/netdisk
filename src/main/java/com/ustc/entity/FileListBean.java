@@ -1,27 +1,39 @@
 package com.ustc.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author 李芝赟
  */
+@ApiModel(description = "文件信息")
 public class FileListBean implements Serializable {
+    @ApiModelProperty(value = "文件id", hidden = true)
     private String id;
+    @ApiModelProperty(name = "pid",value = "父文件夹id", required = true)
     private String pid;
+    @ApiModelProperty(value = "父文件夹名", hidden = true)
     private String pname;
-
+    @ApiModelProperty(value = "文件名", hidden = true)
     private String filename;
+    @ApiModelProperty(value = "文件大小", hidden = true)
     private long filesize;
+    @ApiModelProperty(value = "文件大小KB、MB等表示", hidden = true)
     private String filesizename;
+    @ApiModelProperty(value = "文件后缀", hidden = true)
     private String filesuffix;
+    @ApiModelProperty(value = "文件md5", hidden = true)
     private String filemd5;
-    /**
-     * 0文件夹，1文件
-     */
+    @ApiModelProperty(value = "文件类型", notes = "0-文件夹 1-文件", hidden = true)
     private Integer filetype;
+    @ApiModelProperty(value = "创建者id", hidden = true)
     private String createuserid;
+    @ApiModelProperty(value = "创建者昵称", hidden = true)
     private String createusername;
+    @ApiModelProperty(value = "创建时间", hidden = true)
     private String createtime;
 
 
