@@ -156,7 +156,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public List<FileBean> findChildrenFiles(String folderId) {
         List<FileBean> children = new ArrayList<>();
-        Query query = Query.query((CriteriaDefinition) Criteria.where("pid").is(folderId));
+        Query query = Query.query(Criteria.where("pid").is(folderId));
         List<DiskFile> files = this.mongoTemplate.find(query, DiskFile.class);
         if (!files.isEmpty()) {
             for (DiskFile file : files) {
@@ -215,17 +215,17 @@ public class FileServiceImpl implements FileService {
             throw new RuntimeException("请选择下载记录");
         }
         DownloadBean bean = new DownloadBean();
-        bean.setFileNum(Integer.valueOf(0));
-        bean.setFolderNum(Integer.valueOf(0));
+        bean.setFileNum(0);
+        bean.setFolderNum(0);
         bean.setTotalSize(0L);
         for (String fileId : fileIds) {
-            Query query = Query.query(Criteria.where("id").is(fileId));
+            Query query = Query.query(Criteria.where("_id").is(fileId));
             DiskFile file = this.mongoTemplate.findOne(query, DiskFile.class);
-            bean.setTotalSize(bean.getTotalSize() + file.getFileSize().longValue());
-            if (file.getFileType().intValue() == 1) {
-                bean.setFileNum(Integer.valueOf(bean.getFileNum().intValue() + 1));
-            } else if (file.getFileType().intValue() == 0) {
-                bean.setFolderNum(Integer.valueOf(bean.getFolderNum().intValue() + 1));
+            bean.setTotalSize(bean.getTotalSize() + file.getFileSize());
+            if (file.getFileType() == 1) {
+                bean.setFileNum(bean.getFileNum() + 1);
+            } else if (file.getFileType() == 0) {
+                bean.setFolderNum(bean.getFolderNum() + 1);
             }
             dgGetDownloadInfo(file.getId().toString(), bean);
         }
@@ -237,10 +237,10 @@ public class FileServiceImpl implements FileService {
         if (!CollectionUtils.isEmpty(childrenFiles)) {
             for (FileBean file : childrenFiles) {
                 bean.setTotalSize(bean.getTotalSize() + file.getFilesize());
-                if (file.getFiletype().intValue() == 1) {
-                    bean.setFileNum(Integer.valueOf(bean.getFileNum().intValue() + 1));
-                } else if (file.getFiletype().intValue() == 0) {
-                    bean.setFolderNum(Integer.valueOf(bean.getFolderNum().intValue() + 1));
+                if (file.getFiletype() == 1) {
+                    bean.setFileNum(bean.getFileNum() + 1);
+                } else if (file.getFiletype() == 0) {
+                    bean.setFolderNum(bean.getFolderNum() + 1);
                 }
                 dgGetDownloadInfo(file.getId(), bean);
             }

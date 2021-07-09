@@ -27,6 +27,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
@@ -95,7 +96,7 @@ public class FileDownloadController {
         // 获取用户信息
         // SessionUserBean loginUser = (SessionUserBean) request.getSession().getAttribute("loginUser");
         // 获取下载信息
-        DownloadBean bean = this.fileService.getDownloadInfo(fileids);
+        DownloadBean bean = fileService.getDownloadInfo(fileids);
         // 将字节数转换为K、M、G等
         bean.setTotalSizeName(CapacityUtils.convert(bean.getTotalSize()));
         // 设置文件大小不超过1G
@@ -119,8 +120,6 @@ public class FileDownloadController {
             ValidateUtils.validate(downloadSuffix, "下载文件格式");
             ValidateUtils.validate(idjson, "下载记录");
             String[] fileids = idjson.split(",");
-//            SessionUserBean loginUser = (SessionUserBean) request.getSession().getAttribute("loginUser");
-//            String path = storeConfiguration.getStorePath() + "/" + loginUser.getUserId() + "/" + downloadName;
             String path = storeConfiguration.getStorePath() + "/" + "test" + "/" + downloadName;
             File fileRootZip = new File(path + "." + downloadSuffix);
             if (fileRootZip.exists()) {
@@ -183,9 +182,9 @@ public class FileDownloadController {
                 }
                 String filename = path + "/" + bean.getFilename();
                 FileOutputStream out = new FileOutputStream(filename);
-                List<String> urls = this.fileService.getChunksByFilemd5(bean.getFilemd5());
+                List<String> urls = fileService.getChunksByFilemd5(bean.getFilemd5());
                 for (String url : urls) {
-                    byte[] bytes = this.fileService.getBytesByUrl(url);
+                    byte[] bytes = fileService.getBytesByUrl(storeConfiguration.getStorePath() + "/" + url);
                     out.write(bytes);
                     out.flush();
                 }
@@ -205,7 +204,7 @@ public class FileDownloadController {
         if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
             filename = URLEncoder.encode(filename, "UTF-8");
         } else {
-            filename = new String(filename.getBytes(StandardCharsets.UTF_8),  StandardCharsets.ISO_8859_1);
+            filename = new String(filename.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         }
         response.setHeader("content-disposition", "attachment;filename=" + filename);
         ServletOutputStream servletOutputStream = response.getOutputStream();
