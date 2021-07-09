@@ -31,7 +31,7 @@ public class ChunkStoreHandler extends Handler {
             chunk.setStorePath(storePath);
             this.updateRequest(chunk);
         } else {
-            throw new ServiceException(ServiceExceptionEnum.PARAM_ERROR);
+            throw new ServiceException(ServiceExceptionEnum.UPLOAD_PARAM_ERROR);
         }
     }
 }

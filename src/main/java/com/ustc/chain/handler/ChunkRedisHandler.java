@@ -49,7 +49,7 @@ public class ChunkRedisHandler extends Handler {
                     + "-" + chunk.getChunk();
             stringRedisTemplate.opsForValue().set(key, JsonUtils.objectToJson(temp), 30, TimeUnit.MINUTES);
         } else {
-            throw new ServiceException(ServiceExceptionEnum.PARAM_ERROR);
+            throw new ServiceException(ServiceExceptionEnum.UPLOAD_PARAM_ERROR);
         }
     }
 }

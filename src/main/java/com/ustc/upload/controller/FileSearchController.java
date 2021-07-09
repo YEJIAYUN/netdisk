@@ -17,24 +17,25 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author 叶嘉耘
  * @date 2021/6/27
+ * 搜索功能有bug, 无法完成搜索
  */
 //@Api(tags = "文件搜索及列表")
-//@RestController
-//@RequestMapping("disk/file")
-//public class FileSearchController {
-//
-//    @Autowired
-//    private FileSearchService fileSearchService;
-//
+@RestController
+@RequestMapping("disk/filesearch")
+public class FileSearchController {
+
+    @Autowired
+    private FileSearchService fileSearchService;
+
 //    @ApiOperation("搜索")
 //    @ApiImplicitParams({
 //            @ApiImplicitParam(name = "page", value = "当前分页数", dataTypeClass = Integer.class, required = true),
 //            @ApiImplicitParam(name = "limit", value = "每页记录数", dataTypeClass = Integer.class, required = true),
 //            @ApiImplicitParam(name = "filename", value = "文件名", dataTypeClass = String.class, required = true),
 //    })
-//    @PostMapping("/search")
-//    public PageInfo<FileSearchBean> search(PageInfo<FileSearchBean> pageInfo, String filename, HttpServletRequest request) throws Exception {
-//        return fileSearchService.search(filename, "test", pageInfo.getPage(), pageInfo.getLimit());
-//    }
-//
-//}
+    @PostMapping("/search")
+    public PageInfo<FileSearchBean> search(PageInfo<FileSearchBean> pageInfo, String filename, HttpServletRequest request) throws Exception {
+        return fileSearchService.search(filename, "test", pageInfo.getPage(), pageInfo.getLimit());
+    }
+
+}

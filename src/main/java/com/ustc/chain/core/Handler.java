@@ -1,5 +1,6 @@
 package com.ustc.chain.core;
 
+import com.ustc.exception.ServiceException;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import java.io.IOException;

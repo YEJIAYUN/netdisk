@@ -5,6 +5,8 @@ import com.ustc.chain.core.ContextResponse;
 import com.ustc.chain.core.Handler;
 import com.ustc.chain.param.MoveRequest;
 import com.ustc.entity.DiskFile;
+import com.ustc.exception.ServiceException;
+import com.ustc.exception.ServiceExceptionEnum;
 import com.ustc.filecommon.dao.FileDao;
 import com.ustc.utils.FileType;
 import org.apache.http.client.utils.DateUtils;
@@ -48,6 +50,8 @@ public class MoveUpdateHandler extends Handler {
                     fileDao.updateRecord(record);
                 }
             }
+        } else {
+            throw new ServiceException(ServiceExceptionEnum.MOVE_PARAM_ERROR);
         }
     }
 }

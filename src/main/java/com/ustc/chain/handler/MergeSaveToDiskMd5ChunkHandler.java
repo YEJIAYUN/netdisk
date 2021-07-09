@@ -55,7 +55,7 @@ public class MergeSaveToDiskMd5ChunkHandler extends Handler {
                 diskMd5ChunkDao.insertMany(chunkList);
             }
         } else {
-            throw new ServiceException(ServiceExceptionEnum.PARAM_ERROR);
+            throw new ServiceException(ServiceExceptionEnum.UPLOAD_PARAM_ERROR);
         }
     }
 }

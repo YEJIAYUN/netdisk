@@ -29,7 +29,7 @@ public class MergeValidateHandler extends Handler {
             ValidateUtils.validate(bean.getFilename(), "文件名称");
             ValidateUtils.validate(bean.getTotalSize(), "文件大小");
         } else {
-            throw new ServiceException(ServiceExceptionEnum.VALIDATE_ERROR);
+            throw new ServiceException(ServiceExceptionEnum.UPLOAD_PARAM_ERROR);
         }
     }
 }

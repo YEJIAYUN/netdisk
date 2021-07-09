@@ -32,7 +32,7 @@ public class MergeDelRedisHandler extends Handler {
                     "-" + bean.getFilename() + "-*";
             stringRedisTemplate.delete(key);
         } else {
-            throw new ServiceException(ServiceExceptionEnum.PARAM_ERROR);
+            throw new ServiceException(ServiceExceptionEnum.UPLOAD_PARAM_ERROR);
         }
     }
 }

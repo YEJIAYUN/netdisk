@@ -2,6 +2,7 @@ package com.ustc.filecommon.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ustc.entity.FileListBean;
+import com.ustc.exception.ServiceException;
 import com.ustc.filecommon.service.FileCommonService;
 import com.ustc.utils.CommonResult;
 import com.ustc.utils.CommonResultUtils;
@@ -34,12 +35,14 @@ public class FileCommonController {
 
     @ApiOperation("查找文件夹")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pid", value = "父文件夹id", dataTypeClass = String.class, required = true),
-            @ApiImplicitParam(name = "idjson", value = "id的Json序列化格式, 含有id和文件名", dataTypeClass = String.class, required = true),
-            @ApiImplicitParam(name = "token", dataTypeClass = String.class)
+        @ApiImplicitParam(name = "pid", value = "父文件夹id", dataTypeClass = String.class, required = true),
+        @ApiImplicitParam(name = "idjson", value = "id的Json序列化格式, 含有id和文件名", dataTypeClass = String.class, required = true),
+        @ApiImplicitParam(name = "token", dataTypeClass = String.class)
     })
-    @PostMapping("findFolderList")
-    public CommonResult<List<FileListBean>> findFolderList(@RequestParam("pid") String pid, @RequestParam("idjson") String idJson, String token) throws JsonProcessingException {
+    @PostMapping("/findFolderList")
+    public CommonResult<List<FileListBean>> findFolderList(@RequestParam("pid") String pid,
+                                                           @RequestParam("idjson") String idJson,
+                                                           String token) throws JsonProcessingException {
         // 将idJson中的所有id存入列表中
         List<String> idList = FileUtils.idJsonToList(idJson);
         // 根据token获取用户id
@@ -49,12 +52,13 @@ public class FileCommonController {
 
     @ApiOperation("移动文件到指定文件夹")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pid", value = "目的父文件夹id", dataTypeClass = String.class, required = true),
-            @ApiImplicitParam(name = "idjson", value = "id的Json序列化格式, 含有id和文件名", dataTypeClass = String.class, required = true),
-            @ApiImplicitParam(name = "token", dataTypeClass = String.class)
+        @ApiImplicitParam(name = "pid", value = "目的父文件夹id", dataTypeClass = String.class, required = true),
+        @ApiImplicitParam(name = "idjson", value = "id的Json序列化格式, 含有id和文件名", dataTypeClass = String.class, required = true),
+        @ApiImplicitParam(name = "token", dataTypeClass = String.class)
     })
-    @PostMapping("moveTo")
-    public CommonResult<String> move(@RequestParam("toid") String pid, @RequestParam("idjson") String idJson, String token) throws IOException {
+    @PostMapping("/moveTo")
+    public CommonResult<String> move(@RequestParam("toid") String pid, @RequestParam("idjson") String idJson,
+                                     String token) throws IOException {
         List<String> idList = FileUtils.idJsonToList(idJson);
         // 根据token获取用户id
         fileCommonService.move("test", pid, idList);
@@ -63,14 +67,20 @@ public class FileCommonController {
 
     @ApiOperation("文件重命名")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "文件id", dataTypeClass = String.class, required = true),
-            @ApiImplicitParam(name = "newName", value = "文件id", dataTypeClass = String.class, required = true),
-            @ApiImplicitParam(name = "token", dataTypeClass = String.class)
+        @ApiImplicitParam(name = "id", value = "文件id", dataTypeClass = String.class, required = true),
+        @ApiImplicitParam(name = "newName", value = "文件id", dataTypeClass = String.class, required = true),
+        @ApiImplicitParam(name = "token", dataTypeClass = String.class)
     })
-    @PostMapping("rename")
-    public CommonResult<String> rename(@RequestParam("id") String id, @RequestParam("filename") String newName, String token) {
+    @PostMapping("/rename")
+    public CommonResult<String> rename(@RequestParam("id") String id, @RequestParam("filename") String newName,
+                                       String token) throws IOException {
         // 根据token获取用户id
         fileCommonService.rename("test", id, newName);
         return CommonResultUtils.success("重命名成功");
+    }
+
+    @PostMapping("/findOne")
+    public CommonResult<FileListBean> findOne(@RequestParam("id") String id, String token) {
+        return CommonResultUtils.success(fileCommonService.findOneRecord("test", id));
     }
 }

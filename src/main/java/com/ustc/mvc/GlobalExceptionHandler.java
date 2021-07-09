@@ -20,7 +20,8 @@ import javax.servlet.http.HttpServletRequest;
  @ControllerAdvice(basePackages = {
          "com.ustc.upload.controller",
          "com.ustc.login.controller",
-         "com.ustc.download.controller"})
+         "com.ustc.download.controller",
+         "com.ustc.filecommon.controller"})
 public class GlobalExceptionHandler {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

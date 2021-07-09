@@ -38,7 +38,7 @@ public class MergeFileIsCompleteHandler extends Handler {
                 throw new ServiceException(ServiceExceptionEnum.FILE_NOT_COMPLETE);
             }
         } else {
-            throw new ServiceException(ServiceExceptionEnum.PARAM_ERROR);
+            throw new ServiceException(ServiceExceptionEnum.UPLOAD_PARAM_ERROR);
         }
     }
 }

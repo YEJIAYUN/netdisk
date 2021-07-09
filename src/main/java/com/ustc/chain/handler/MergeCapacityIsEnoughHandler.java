@@ -20,7 +20,7 @@ public class MergeCapacityIsEnoughHandler extends Handler {
         if (request instanceof MergeRequest) {
             // 如果容量不足抛异常
         } else {
-            throw new ServiceException(ServiceExceptionEnum.PARAM_ERROR);
+            throw new ServiceException(ServiceExceptionEnum.UPLOAD_PARAM_ERROR);
         }
     }
 }

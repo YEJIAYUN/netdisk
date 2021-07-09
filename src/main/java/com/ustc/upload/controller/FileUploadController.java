@@ -44,7 +44,7 @@ public class FileUploadController {
             @ApiImplicitParam(name = "token", dataTypeClass = String.class, required = true)
     })
     @PostMapping("/uploadChunk")
-    public CommonResult<String> uploadChunk(MultipartFile file, ChunkPojo chunkPojo, String token) throws IOException, RuntimeException, SolrServerException {
+    public CommonResult<String> uploadChunk(MultipartFile file, ChunkPojo chunkPojo, String token) throws IOException, SolrServerException {
         // 1. 通过token获取用户信息
         System.out.println("uploadChunk中收到的uuid: " + chunkPojo.getUuid());
         // 2. 判断切块是否为空

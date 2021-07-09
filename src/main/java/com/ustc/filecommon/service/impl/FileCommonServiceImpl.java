@@ -3,18 +3,18 @@ package com.ustc.filecommon.service.impl;
 import com.ustc.chain.core.HandlerInitializer;
 import com.ustc.chain.core.Pipeline;
 import com.ustc.chain.core.ResponsibleChain;
-import com.ustc.chain.handler.MoveUpdateHandler;
-import com.ustc.chain.handler.MoveValidateHandler;
+import com.ustc.chain.handler.*;
 import com.ustc.chain.param.MoveRequest;
+import com.ustc.chain.param.RenameRequest;
 import com.ustc.entity.DiskFile;
 import com.ustc.entity.FileListBean;
+import com.ustc.exception.ServiceException;
 import com.ustc.filecommon.dao.FileDao;
 import com.ustc.filecommon.service.FileCommonService;
+import com.ustc.utils.CapacityUtils;
 import com.ustc.utils.SpringContentUtils;
 import org.apache.http.client.utils.DateUtils;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -55,6 +55,7 @@ public class FileCommonServiceImpl implements FileCommonService {
 
     @Override
     public void move(String userid, String pid, List<String> idList) throws IOException {
+        // 创建移动职责链
         ResponsibleChain responsibleChain = new ResponsibleChain();
         MoveRequest moveRequest = new MoveRequest(userid, pid, idList);
 
@@ -71,7 +72,40 @@ public class FileCommonServiceImpl implements FileCommonService {
     }
 
     @Override
-    public void rename(String userid, String id, String newName) {
+    public void rename(String userid, String id, String newName) throws IOException {
+        // 创建重命名职责链
+        ResponsibleChain responsibleChain = new ResponsibleChain();
+        RenameRequest renameRequest = new RenameRequest(userid, id, newName);
 
+        responsibleChain.loadHandler(new HandlerInitializer(renameRequest, null) {
+            @Override
+            protected void initChannel(Pipeline line) {
+                // 1. 参数校验
+                line.addLast(scu.getHandler(RenameValidateHandler.class));
+                // 2. 检查是否存在同名记录
+                line.addLast(scu.getHandler(RenameIsExistHandler.class));
+                // 3. 重命名, 即修改数据库记录
+                line.addLast(scu.getHandler(RenameUpdateHandler.class));
+            }
+        });
+        // 执行职责链
+        responsibleChain.execute();
+    }
+
+    @Override
+    public FileListBean findOneRecord(String userid, String id) {
+        DiskFile diskFile = fileDao.findOne(userid, id);
+        FileListBean fileListBean = new FileListBean();
+        fileListBean.setFiletype(diskFile.getFileType());
+        fileListBean.setFilesuffix(diskFile.getFileSuffix());
+        fileListBean.setId(diskFile.getId().toString());
+        fileListBean.setPid(diskFile.getPid());
+        fileListBean.setFilename(diskFile.getFileName());
+        fileListBean.setFilesize(diskFile.getFileSize());
+        fileListBean.setFilesizename(CapacityUtils.convert(diskFile.getFileSize()));
+        fileListBean.setCreateuserid(diskFile.getUserid());
+        fileListBean.setFilemd5(diskFile.getFileMd5());
+        fileListBean.setCreatetime(DateUtils.formatDate(diskFile.getCreateTime(), "yyyy-MM-dd mm:ss"));
+        return fileListBean;
     }
 }

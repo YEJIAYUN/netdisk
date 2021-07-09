@@ -31,7 +31,7 @@ public class ChunkValidateHandler extends Handler {
             ValidateUtils.validate(chunk.getUserid(), "用户ID");
             ValidateUtils.validate(chunk.getUsername(), "用户姓名");
         } else {
-            throw new ServiceException(ServiceExceptionEnum.VALIDATE_ERROR);
+            throw new ServiceException(ServiceExceptionEnum.UPLOAD_PARAM_ERROR);
         }
     }
 }

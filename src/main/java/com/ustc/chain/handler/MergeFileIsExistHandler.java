@@ -30,7 +30,7 @@ public class MergeFileIsExistHandler extends Handler {
 
             this.updateRequest(bean);
         } else {
-            throw new ServiceException(ServiceExceptionEnum.PARAM_ERROR);
+            throw new ServiceException(ServiceExceptionEnum.UPLOAD_PARAM_ERROR);
         }
     }
 }

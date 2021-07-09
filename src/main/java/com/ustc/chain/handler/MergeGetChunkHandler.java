@@ -53,7 +53,7 @@ public class MergeGetChunkHandler extends Handler {
             bean.setChunkTemps(temps);
             this.updateRequest(request);
         } else {
-            throw new ServiceException(ServiceExceptionEnum.PARAM_ERROR);
+            throw new ServiceException(ServiceExceptionEnum.UPLOAD_PARAM_ERROR);
         }
     }
 }

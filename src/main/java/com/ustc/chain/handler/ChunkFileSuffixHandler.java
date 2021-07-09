@@ -27,7 +27,7 @@ public class ChunkFileSuffixHandler extends Handler {
             chunk.setTypecode("0");
 
         } else {
-            throw new RuntimeException("ChunkFileSuffixHandler参数不正确");
+            throw new ServiceException(ServiceExceptionEnum.UPLOAD_PARAM_ERROR);
         }
     }
 }
